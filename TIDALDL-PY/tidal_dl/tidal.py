@@ -383,7 +383,10 @@ class TidalAPI(object):
             ret.soundQuality = resp.audioQuality
             ret.codec = aigpy.string.getSub(xmldata, 'codecs="', '"')
             ret.encryptionKey = ""  # manifest['keyId'] if 'keyId' in manifest else ""
-            ret.urls = self.parse_mpd(xmldata)[0]
+            parsed_urls = self.parse_mpd(xmldata)
+            if not parsed_urls:
+                raise Exception("Could not parse DASH manifest, it is empty.")
+            ret.urls = parsed_urls[0]
             if len(ret.urls) > 0:
                 ret.url = ret.urls[0]
             return ret
