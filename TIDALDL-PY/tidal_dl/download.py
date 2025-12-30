@@ -118,24 +118,26 @@ def downloadVideo(video: Video, album: Album = None, playlist: Playlist = None):
 
         m3u8content = requests.get(stream.m3u8Url).content
         if m3u8content is None:
-            Printf.err(f"DL Video[{video.title}] getM3u8 failed.{str(e)}")
-            return False, f"GetM3u8 failed.{str(e)}"
+            Printf.err(f"DL Video[{video.title}] getM3u8 failed.")
+            return False, f"GetM3u8 failed."
 
         urls = aigpy.m3u8.parseTsUrls(m3u8content)
         if len(urls) <= 0:
-            Printf.err(f"DL Video[{video.title}] getTsUrls failed.{str(e)}")
-            return False, "GetTsUrls failed.{str(e)}"
+            Printf.err(f"DL Video[{video.title}] getTsUrls failed.")
+            return False, "GetTsUrls failed."
 
         check, msg = aigpy.m3u8.downloadByTsUrls(urls, path)
         if check:
             Printf.success(video.title)
             return True
         else:
-            Printf.err(f"DL Video[{video.title}] failed.{msg}")
-            return False, msg
+            errmsg = f"DL Video[{video.title}] failed: {msg}"
+            Printf.err(errmsg)
+            return False, errmsg
     except Exception as e:
-        Printf.err(f"DL Video[{video.title}] failed.{str(e)}")
-        return False, str(e)
+        errmsg = f"DL Video[{video.title}] failed: {str(e)}"
+        Printf.err(errmsg)
+        return False, errmsg
 
 
 def downloadTrack(track: Track, album=None, playlist=None, userProgress=None, partSize=1048576):
@@ -162,8 +164,9 @@ def downloadTrack(track: Track, album=None, playlist=None, userProgress=None, pa
         tool.setPartSize(partSize)
         check, err = tool.start(SETTINGS.showProgress and not SETTINGS.multiThread)
         if not check:
-            Printf.err(f"DL Track '{track.title}' failed: {str(err)}")
-            return False, str(err)
+            errmsg = f"DL Track '{track.title}' failed: {str(err)}"
+            Printf.err(errmsg)
+            return False, errmsg
 
         # encrypted -> decrypt and remove encrypted file
         __encrypted__(stream, path + '.part', path)
@@ -188,8 +191,9 @@ def downloadTrack(track: Track, album=None, playlist=None, userProgress=None, pa
 
         return True, ''
     except Exception as e:
-        Printf.err(f"DL Track '{track.title}' failed: {str(e)}")
-        return False, str(e)
+        errmsg = f"DL Track '{track.title}' failed: {str(e)}"
+        Printf.err(errmsg)
+        return False, errmsg
 
 
 def downloadTracks(tracks, album: Album = None, playlist: Playlist = None):

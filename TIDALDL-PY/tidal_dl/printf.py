@@ -178,7 +178,7 @@ class Printf(object):
         global print_mutex
         print_mutex.acquire()
         print(aigpy.cmd.red(LANG.select.PRINT_ERR + " ") + string)
-        # logging.error(string)
+        logging.error(string)
         print_mutex.release()
 
     @staticmethod
