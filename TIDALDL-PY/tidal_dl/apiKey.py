@@ -28,7 +28,7 @@ __KEYS_JSON__ = '''
             "formats": "Master-Only(Else Error)",
             "clientId": "7m7Ap0JC9j1cOM3n",
             "clientSecret": "vRAdA108tlvkJpTsGZS8rGZ7xTlbJ0qaZ2K9saEzsgY=",
-            "valid": "True",
+            "valid": "False",
             "from": "Dniel97 (https://github.com/Dniel97/RedSea/blob/4ba02b88cee33aeb735725cb854be6c66ff372d4/config/settings.example.py#L68)"
         },
         {
