@@ -60,6 +60,7 @@ class LangEnglish(object):
     PRINT_ERR = "[ERR]"
     PRINT_INFO = "[INFO]"
     PRINT_SUCCESS = "[SUCCESS]"
+    PRINT_DOWNLOADING = "[DOWNLOADING]"
 
     PRINT_ENTER_CHOICE = "Enter Choice:"
     PRINT_LATEST_VERSION = "Latest version:"

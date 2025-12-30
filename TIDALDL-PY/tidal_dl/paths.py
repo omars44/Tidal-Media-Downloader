@@ -42,6 +42,8 @@ def __getExtension__(stream: StreamUrl):
         elif 'flac' in stream.codec:
             return '.flac'
         return '.m4a'
+    if 'flac' in stream.codec:
+        return '.flac'
     return '.m4a'
 
 

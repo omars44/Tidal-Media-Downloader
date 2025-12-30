@@ -14,6 +14,7 @@ from concurrent.futures import ThreadPoolExecutor
 from decryption import *
 from printf import *
 from tidal import *
+import subprocess
 
 
 def __isSkip__(finalpath, url):
@@ -33,6 +34,23 @@ def __encrypted__(stream, srcPath, descPath):
         key, nonce = decrypt_security_token(stream.encryptionKey)
         decrypt_file(srcPath, descPath, key, nonce)
         os.remove(srcPath)
+
+
+def __isMp4__(path):
+    with open(path, 'rb') as f:
+        data = f.read(8)
+        if len(data) < 8:
+            return False
+        return data[4:8] == b'ftyp'
+
+
+def __remux__(srcPath, descPath):
+    try:
+        command = f'ffmpeg -y -v quiet -i "{srcPath}" -c:a copy "{descPath}"'
+        subprocess.call(command, shell=True)
+        return True
+    except:
+        return False
 
 
 def __parseContributors__(roleType, Contributors):
@@ -143,6 +161,8 @@ def downloadTrack(track: Track, album=None, playlist=None, userProgress=None, pa
         stream = TIDAL_API.getStreamUrl(track.id, SETTINGS.audioQuality)
         path = getTrackPath(track, stream, album, playlist)
 
+        Printf.downloading(track.title)
+
         if SETTINGS.showTrackInfo and not SETTINGS.multiThread:
             Printf.track(track, stream)
 
@@ -167,6 +187,13 @@ def downloadTrack(track: Track, album=None, playlist=None, userProgress=None, pa
 
         # encrypted -> decrypt and remove encrypted file
         __encrypted__(stream, path + '.part', path)
+
+        # remux if needed
+        if '.flac' in path and __isMp4__(path):
+            tmpPath = path + '.tmp.flac'
+            if __remux__(path, tmpPath):
+                os.remove(path)
+                os.rename(tmpPath, path)
 
         # contributors
         try:

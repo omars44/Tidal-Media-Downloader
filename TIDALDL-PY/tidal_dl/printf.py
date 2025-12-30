@@ -196,6 +196,14 @@ class Printf(object):
         print_mutex.release()
 
     @staticmethod
+    def downloading(string):
+        global print_mutex
+        print_mutex.acquire()
+        label = getattr(LANG.select, 'PRINT_DOWNLOADING', "[DOWNLOADING]")
+        print(aigpy.cmd.yellow(label + " ") + string)
+        print_mutex.release()
+
+    @staticmethod
     def album(data: Album):
         tb = Printf.__gettable__([LANG.select.MODEL_ALBUM_PROPERTY, LANG.select.VALUE], [
             [LANG.select.MODEL_TITLE, data.title],
